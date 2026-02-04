@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HafMC - Ссылки</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #0a0a0a;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            color: #fff;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Анимированный фон */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 50%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(59, 130, 246, 0.1) 0%, transparent 50%);
+            animation: pulse 8s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        .container {
+            width: 100%;
+            max-width: 640px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile {
+            margin-bottom: 48px;
+            animation: slideDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .profile-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #3b82f6 100%);
+            background-image: url('avatar.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            margin: 0 auto 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 
+                0 0 40px rgba(139, 92, 246, 0.5),
+                0 0 80px rgba(236, 72, 153, 0.3),
+                inset 0 0 20px rgba(255, 255, 255, 0.1);
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            animation: float 6s ease-in-out infinite;
+            overflow: hidden;
+        }
+
+        .profile-avatar::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, #8b5cf6, #ec4899, #3b82f6);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .profile-avatar:hover::after {
+            opacity: 1;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(5deg); }
+        }
+
+        .profile-name {
+            font-size: 42px;
+            font-weight: 900;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, #fff 0%, #a78bfa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+            text-shadow: 0 0 30px rgba(139, 92, 246, 0.5);
+        }
+
+        .profile-subtitle {
+            font-size: 16px;
+            color: #a1a1aa;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .link-item {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 20px 24px;
+            text-decoration: none;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        .link-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s;
+        }
+
+        .link-item:hover::before {
+            left: 100%;
+        }
+
+        .link-item:nth-child(1) { animation-delay: 0.1s; }
+        .link-item:nth-child(2) { animation-delay: 0.15s; }
+        .link-item:nth-child(3) { animation-delay: 0.2s; }
+        .link-item:nth-child(4) { animation-delay: 0.25s; }
+        .link-item:nth-child(5) { animation-delay: 0.3s; }
+        .link-item:nth-child(6) { animation-delay: 0.35s; }
+        .link-item:nth-child(7) { animation-delay: 0.4s; }
+        .link-item:nth-child(8) { animation-delay: 0.45s; }
+        .link-item:nth-child(9) { animation-delay: 0.5s; }
+        .link-item:nth-child(10) { animation-delay: 0.55s; }
+        .link-item:nth-child(11) { animation-delay: 0.6s; }
+        .link-item:nth-child(12) { animation-delay: 0.65s; }
+
+        .link-item:hover {
+            transform: translateY(-6px) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(255, 255, 255, 0.1);
+        }
+
+        .link-item:active {
+            transform: translateY(-3px) scale(1.01);
+        }
+
+        .link-icon {
+            font-size: 32px;
+            width: 56px;
+            height: 56px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .link-item:hover .link-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .link-content {
+            flex: 1;
+            text-align: left;
+            position: relative;
+            z-index: 1;
+        }
+
+        .link-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 4px;
+            letter-spacing: -0.3px;
+        }
+
+        .link-description {
+            font-size: 13px;
+            color: #a1a1aa;
+            font-weight: 400;
+            letter-spacing: 0.2px;
+        }
+
+        .link-arrow {
+            font-size: 24px;
+            opacity: 0.4;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
+            z-index: 1;
+        }
+
+        .link-item:hover .link-arrow {
+            opacity: 1;
+            transform: translateX(8px);
+        }
+
+        /* Платформенные цвета */
+        .link-item[data-platform="twitch"]:hover {
+            background: rgba(145, 70, 255, 0.15);
+            border-color: rgba(145, 70, 255, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(145, 70, 255, 0.2),
+                0 0 40px rgba(145, 70, 255, 0.3);
+        }
+
+        .link-item[data-platform="twitch"]:hover .link-icon {
+            background: rgba(145, 70, 255, 0.2);
+            border-color: rgba(145, 70, 255, 0.4);
+        }
+
+        .link-item[data-platform="youtube"]:hover {
+            background: rgba(239, 68, 68, 0.15);
+            border-color: rgba(239, 68, 68, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(239, 68, 68, 0.2),
+                0 0 40px rgba(239, 68, 68, 0.3);
+        }
+
+        .link-item[data-platform="youtube"]:hover .link-icon {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: rgba(239, 68, 68, 0.4);
+        }
+
+        .link-item[data-platform="telegram"]:hover {
+            background: rgba(37, 150, 190, 0.15);
+            border-color: rgba(37, 150, 190, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(37, 150, 190, 0.2),
+                0 0 40px rgba(37, 150, 190, 0.3);
+        }
+
+        .link-item[data-platform="telegram"]:hover .link-icon {
+            background: rgba(37, 150, 190, 0.2);
+            border-color: rgba(37, 150, 190, 0.4);
+        }
+
+        .link-item[data-platform="boosty"]:hover {
+            background: rgba(251, 191, 36, 0.15);
+            border-color: rgba(251, 191, 36, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(251, 191, 36, 0.2),
+                0 0 40px rgba(251, 191, 36, 0.3);
+        }
+
+        .link-item[data-platform="boosty"]:hover .link-icon {
+            background: rgba(251, 191, 36, 0.2);
+            border-color: rgba(251, 191, 36, 0.4);
+        }
+
+        .link-item[data-platform="vk"]:hover {
+            background: rgba(76, 117, 163, 0.15);
+            border-color: rgba(76, 117, 163, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(76, 117, 163, 0.2),
+                0 0 40px rgba(76, 117, 163, 0.3);
+        }
+
+        .link-item[data-platform="vk"]:hover .link-icon {
+            background: rgba(76, 117, 163, 0.2);
+            border-color: rgba(76, 117, 163, 0.4);
+        }
+
+        .link-item[data-platform="steam"]:hover {
+            background: rgba(27, 40, 56, 0.25);
+            border-color: rgba(100, 116, 139, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(100, 116, 139, 0.2),
+                0 0 40px rgba(100, 116, 139, 0.3);
+        }
+
+        .link-item[data-platform="steam"]:hover .link-icon {
+            background: rgba(100, 116, 139, 0.2);
+            border-color: rgba(100, 116, 139, 0.4);
+        }
+
+        .link-item[data-platform="donate"]:hover {
+            background: rgba(34, 197, 94, 0.15);
+            border-color: rgba(34, 197, 94, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(34, 197, 94, 0.2),
+                0 0 40px rgba(34, 197, 94, 0.3);
+        }
+
+        .link-item[data-platform="donate"]:hover .link-icon {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .link-item[data-platform="meme"]:hover {
+            background: rgba(168, 85, 247, 0.15);
+            border-color: rgba(168, 85, 247, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(168, 85, 247, 0.2),
+                0 0 40px rgba(168, 85, 247, 0.3);
+        }
+
+        .link-item[data-platform="meme"]:hover .link-icon {
+            background: rgba(168, 85, 247, 0.2);
+            border-color: rgba(168, 85, 247, 0.4);
+        }
+
+        .link-item[data-platform="discord"]:hover {
+            background: rgba(88, 101, 242, 0.15);
+            border-color: rgba(88, 101, 242, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(88, 101, 242, 0.2),
+                0 0 40px rgba(88, 101, 242, 0.3);
+        }
+
+        .link-item[data-platform="discord"]:hover .link-icon {
+            background: rgba(88, 101, 242, 0.2);
+            border-color: rgba(88, 101, 242, 0.4);
+        }
+
+        .link-item[data-platform="stratege"]:hover {
+            background: rgba(59, 130, 246, 0.15);
+            border-color: rgba(59, 130, 246, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(59, 130, 246, 0.2),
+                0 0 40px rgba(59, 130, 246, 0.3);
+        }
+
+        .link-item[data-platform="stratege"]:hover .link-icon {
+            background: rgba(59, 130, 246, 0.2);
+            border-color: rgba(59, 130, 246, 0.4);
+        }
+
+        .link-item[data-platform="orders"]:hover {
+            background: rgba(245, 158, 11, 0.15);
+            border-color: rgba(245, 158, 11, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(245, 158, 11, 0.2),
+                0 0 40px rgba(245, 158, 11, 0.3);
+        }
+
+        .link-item[data-platform="orders"]:hover .link-icon {
+            background: rgba(245, 158, 11, 0.2);
+            border-color: rgba(245, 158, 11, 0.4);
+        }
+
+        .link-item[data-platform="marathons"]:hover {
+            background: rgba(236, 72, 153, 0.15);
+            border-color: rgba(236, 72, 153, 0.4);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(236, 72, 153, 0.2),
+                0 0 40px rgba(236, 72, 153, 0.3);
+        }
+
+        .link-item[data-platform="marathons"]:hover .link-icon {
+            background: rgba(236, 72, 153, 0.2);
+            border-color: rgba(236, 72, 153, 0.4);
+        }
+
+        .footer {
+            margin-top: 48px;
+            font-size: 13px;
+            color: #52525b;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            animation: fadeIn 1s ease-out 0.6s both;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .profile-avatar {
+                width: 120px;
+                height: 120px;
+            }
+
+            .profile-name {
+                font-size: 36px;
+            }
+
+            .link-item {
+                padding: 18px 20px;
+                gap: 16px;
+            }
+
+            .link-icon {
+                font-size: 28px;
+                width: 48px;
+                height: 48px;
+            }
+
+            .link-title {
+                font-size: 17px;
+            }
+
+            .link-description {
+                font-size: 12px;
+            }
+        }
+
+        /* Скроллбар */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0a0a;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="profile">
+            <div class="profile-avatar"></div>
+            <h1 class="profile-name">HafMC</h1>
+            <p class="profile-subtitle">Стример • Геймер</p>
+        </div>
+
+        <div class="links">
+            <a href="https://www.twitch.tv/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="twitch">
+                <div class="link-icon">📺</div>
+                <div class="link-content">
+                    <div class="link-title">Twitch</div>
+                    <div class="link-description">Смотри стримы в прямом эфире</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://youtube.com/@HafMC" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="youtube">
+                <div class="link-icon">▶️</div>
+                <div class="link-content">
+                    <div class="link-title">YouTube</div>
+                    <div class="link-description">Стримы, музыка и клипы</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://t.me/HafMCtw" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="telegram">
+                <div class="link-icon">💬</div>
+                <div class="link-content">
+                    <div class="link-title">Telegram</div>
+                    <div class="link-description">Анонсы и обновления</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://discord.gg/VQFuQgmHSh" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="discord">
+                <div class="link-icon">💜</div>
+                <div class="link-content">
+                    <div class="link-title">Discord</div>
+                    <div class="link-description">Присоединяйся к серверу</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://boosty.to/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="boosty">
+                <div class="link-icon">⭐</div>
+                <div class="link-content">
+                    <div class="link-title">Boosty</div>
+                    <div class="link-description">Эксклюзивный контент</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://vk.com/love.n.spring" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="vk">
+                <div class="link-icon">🎵</div>
+                <div class="link-content">
+                    <div class="link-title">VK (Музыка)</div>
+                    <div class="link-description">Группа с музыкой</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://steamcommunity.com/id/pornopunk/" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="steam">
+                <div class="link-icon">🎮</div>
+                <div class="link-content">
+                    <div class="link-title">Steam</div>
+                    <div class="link-description">Профиль в Steam</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://www.stratege.ru/playstation/users/hafmc#args:ajax=1" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="stratege">
+                <div class="link-icon">🎯</div>
+                <div class="link-content">
+                    <div class="link-title">Stratege</div>
+                    <div class="link-description">Профиль PlayStation</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://l.hafmc.me/p/orders" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="orders">
+                <div class="link-icon">📋</div>
+                <div class="link-content">
+                    <div class="link-title">Игры в очереди</div>
+                    <div class="link-description">На прохождение</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://l.hafmc.me/p/marathons" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="marathons">
+                <div class="link-icon">🏃</div>
+                <div class="link-content">
+                    <div class="link-title">Текущие марафоны</div>
+                    <div class="link-description">Активные прохождения</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://www.donationalerts.com/r/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="donate">
+                <div class="link-icon">💝</div>
+                <div class="link-content">
+                    <div class="link-title">Донаты</div>
+                    <div class="link-description">Поддержать стримера</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+
+            <a href="https://memealerts.com/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="meme">
+                <div class="link-icon">😂</div>
+                <div class="link-content">
+                    <div class="link-title">Отправить мем</div>
+                    <div class="link-description">Мемы на стрим</div>
+                </div>
+                <div class="link-arrow">→</div>
+            </a>
+        </div>
+
+        <div class="footer">
+            <p>© 2026 HafMC</p>
+        </div>
+    </div>
+</body>
+</html>
