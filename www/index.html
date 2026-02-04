@@ -129,8 +129,30 @@
         .links {
             display: flex;
             flex-direction: column;
+            gap: 32px;
+        }
+
+        .link-group {
+            display: flex;
+            flex-direction: column;
             gap: 12px;
         }
+
+        .group-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #a1a1aa;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            padding: 0 4px;
+            animation: fadeIn 0.6s ease-out both;
+        }
+
+        .link-group:nth-child(1) .group-title { animation-delay: 0.1s; }
+        .link-group:nth-child(2) .group-title { animation-delay: 0.2s; }
+        .link-group:nth-child(3) .group-title { animation-delay: 0.3s; }
+        .link-group:nth-child(4) .group-title { animation-delay: 0.4s; }
 
         .link-item {
             background: rgba(255, 255, 255, 0.03);
@@ -164,18 +186,18 @@
             left: 100%;
         }
 
-        .link-item:nth-child(1) { animation-delay: 0.1s; }
-        .link-item:nth-child(2) { animation-delay: 0.15s; }
-        .link-item:nth-child(3) { animation-delay: 0.2s; }
-        .link-item:nth-child(4) { animation-delay: 0.25s; }
-        .link-item:nth-child(5) { animation-delay: 0.3s; }
-        .link-item:nth-child(6) { animation-delay: 0.35s; }
-        .link-item:nth-child(7) { animation-delay: 0.4s; }
-        .link-item:nth-child(8) { animation-delay: 0.45s; }
-        .link-item:nth-child(9) { animation-delay: 0.5s; }
-        .link-item:nth-child(10) { animation-delay: 0.55s; }
-        .link-item:nth-child(11) { animation-delay: 0.6s; }
-        .link-item:nth-child(12) { animation-delay: 0.65s; }
+        .link-group:nth-child(1) .link-item:nth-child(2) { animation-delay: 0.15s; }
+        .link-group:nth-child(1) .link-item:nth-child(3) { animation-delay: 0.2s; }
+        .link-group:nth-child(1) .link-item:nth-child(4) { animation-delay: 0.25s; }
+        .link-group:nth-child(2) .link-item:nth-child(2) { animation-delay: 0.35s; }
+        .link-group:nth-child(2) .link-item:nth-child(3) { animation-delay: 0.4s; }
+        .link-group:nth-child(2) .link-item:nth-child(4) { animation-delay: 0.45s; }
+        .link-group:nth-child(3) .link-item:nth-child(2) { animation-delay: 0.55s; }
+        .link-group:nth-child(3) .link-item:nth-child(3) { animation-delay: 0.6s; }
+        .link-group:nth-child(3) .link-item:nth-child(4) { animation-delay: 0.65s; }
+        .link-group:nth-child(3) .link-item:nth-child(5) { animation-delay: 0.7s; }
+        .link-group:nth-child(4) .link-item:nth-child(2) { animation-delay: 0.8s; }
+        .link-group:nth-child(4) .link-item:nth-child(3) { animation-delay: 0.85s; }
 
         .link-item:hover {
             transform: translateY(-6px) scale(1.02);
@@ -463,6 +485,19 @@
                 font-size: 36px;
             }
 
+            .links {
+                gap: 28px;
+            }
+
+            .link-group {
+                gap: 10px;
+            }
+
+            .group-title {
+                font-size: 12px;
+                margin-bottom: 6px;
+            }
+
             .link-item {
                 padding: 18px 20px;
                 gap: 16px;
@@ -511,113 +546,129 @@
         </div>
 
         <div class="links">
-            <a href="https://www.twitch.tv/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="twitch">
-                <div class="link-icon">📺</div>
-                <div class="link-content">
-                    <div class="link-title">Twitch</div>
-                    <div class="link-description">Смотри стримы в прямом эфире</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+            <!-- Стриминг и контент -->
+            <div class="link-group">
+                <div class="group-title">Стриминг и контент</div>
+                <a href="https://www.twitch.tv/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="twitch">
+                    <div class="link-icon">📺</div>
+                    <div class="link-content">
+                        <div class="link-title">Twitch</div>
+                        <div class="link-description">Смотри стримы в прямом эфире</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
 
-            <a href="https://youtube.com/@HafMC" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="youtube">
-                <div class="link-icon">▶️</div>
-                <div class="link-content">
-                    <div class="link-title">YouTube</div>
-                    <div class="link-description">Стримы, музыка и клипы</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+                <a href="https://youtube.com/@HafMC" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="youtube">
+                    <div class="link-icon">▶️</div>
+                    <div class="link-content">
+                        <div class="link-title">YouTube</div>
+                        <div class="link-description">Стримы, музыка и клипы</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
 
-            <a href="https://t.me/HafMCtw" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="telegram">
-                <div class="link-icon">💬</div>
-                <div class="link-content">
-                    <div class="link-title">Telegram</div>
-                    <div class="link-description">Анонсы и обновления</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+                <a href="https://boosty.to/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="boosty">
+                    <div class="link-icon">⭐</div>
+                    <div class="link-content">
+                        <div class="link-title">Boosty</div>
+                        <div class="link-description">Эксклюзивный контент</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
+            </div>
 
-            <a href="https://discord.gg/VQFuQgmHSh" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="discord">
-                <div class="link-icon">💜</div>
-                <div class="link-content">
-                    <div class="link-title">Discord</div>
-                    <div class="link-description">Присоединяйся к серверу</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+            <!-- Социальные сети -->
+            <div class="link-group">
+                <div class="group-title">Социальные сети</div>
+                <a href="https://t.me/HafMCtw" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="telegram">
+                    <div class="link-icon">💬</div>
+                    <div class="link-content">
+                        <div class="link-title">Telegram</div>
+                        <div class="link-description">Анонсы и обновления</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
 
-            <a href="https://boosty.to/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="boosty">
-                <div class="link-icon">⭐</div>
-                <div class="link-content">
-                    <div class="link-title">Boosty</div>
-                    <div class="link-description">Эксклюзивный контент</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+                <a href="https://discord.gg/VQFuQgmHSh" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="discord">
+                    <div class="link-icon">💜</div>
+                    <div class="link-content">
+                        <div class="link-title">Discord</div>
+                        <div class="link-description">Присоединяйся к серверу</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
 
-            <a href="https://vk.com/love.n.spring" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="vk">
-                <div class="link-icon">🎵</div>
-                <div class="link-content">
-                    <div class="link-title">VK (Музыка)</div>
-                    <div class="link-description">Группа с музыкой</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+                <a href="https://vk.com/love.n.spring" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="vk">
+                    <div class="link-icon">🎵</div>
+                    <div class="link-content">
+                        <div class="link-title">VK (Музыка)</div>
+                        <div class="link-description">Группа с музыкой</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
+            </div>
 
-            <a href="https://steamcommunity.com/id/pornopunk/" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="steam">
-                <div class="link-icon">🎮</div>
-                <div class="link-content">
-                    <div class="link-title">Steam</div>
-                    <div class="link-description">Профиль в Steam</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+            <!-- Игры -->
+            <div class="link-group">
+                <div class="group-title">Игры</div>
+                <a href="https://steamcommunity.com/id/pornopunk/" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="steam">
+                    <div class="link-icon">🎮</div>
+                    <div class="link-content">
+                        <div class="link-title">Steam</div>
+                        <div class="link-description">Профиль в Steam</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
 
-            <a href="https://www.stratege.ru/playstation/users/hafmc#args:ajax=1" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="stratege">
-                <div class="link-icon">🎯</div>
-                <div class="link-content">
-                    <div class="link-title">Stratege</div>
-                    <div class="link-description">Профиль PlayStation</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+                <a href="https://www.stratege.ru/playstation/users/hafmc#args:ajax=1" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="stratege">
+                    <div class="link-icon">🎯</div>
+                    <div class="link-content">
+                        <div class="link-title">Stratege</div>
+                        <div class="link-description">Профиль PlayStation</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
 
-            <a href="https://l.hafmc.me/p/orders" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="orders">
-                <div class="link-icon">📋</div>
-                <div class="link-content">
-                    <div class="link-title">Игры в очереди</div>
-                    <div class="link-description">На прохождение</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+                <a href="https://l.hafmc.me/p/orders" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="orders">
+                    <div class="link-icon">📋</div>
+                    <div class="link-content">
+                        <div class="link-title">Игры в очереди</div>
+                        <div class="link-description">На прохождение</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
 
-            <a href="https://l.hafmc.me/p/marathons" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="marathons">
-                <div class="link-icon">🏃</div>
-                <div class="link-content">
-                    <div class="link-title">Текущие марафоны</div>
-                    <div class="link-description">Активные прохождения</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+                <a href="https://l.hafmc.me/p/marathons" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="marathons">
+                    <div class="link-icon">🏃</div>
+                    <div class="link-content">
+                        <div class="link-title">Текущие марафоны</div>
+                        <div class="link-description">Активные прохождения</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
+            </div>
 
-            <a href="https://www.donationalerts.com/r/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="donate">
-                <div class="link-icon">💝</div>
-                <div class="link-content">
-                    <div class="link-title">Донаты</div>
-                    <div class="link-description">Поддержать стримера</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+            <!-- Поддержка -->
+            <div class="link-group">
+                <div class="group-title">Поддержка</div>
+                <a href="https://www.donationalerts.com/r/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="donate">
+                    <div class="link-icon">💝</div>
+                    <div class="link-content">
+                        <div class="link-title">Донаты</div>
+                        <div class="link-description">Поддержать стримера</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
 
-            <a href="https://memealerts.com/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="meme">
-                <div class="link-icon">😂</div>
-                <div class="link-content">
-                    <div class="link-title">Отправить мем</div>
-                    <div class="link-description">Мемы на стрим</div>
-                </div>
-                <div class="link-arrow">→</div>
-            </a>
+                <a href="https://memealerts.com/hafmc" target="_blank" rel="noopener noreferrer" class="link-item" data-platform="meme">
+                    <div class="link-icon">😂</div>
+                    <div class="link-content">
+                        <div class="link-title">Отправить мем</div>
+                        <div class="link-description">Мемы на стрим</div>
+                    </div>
+                    <div class="link-arrow">→</div>
+                </a>
+            </div>
         </div>
 
         <div class="footer">

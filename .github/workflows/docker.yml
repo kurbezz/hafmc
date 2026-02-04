@@ -58,3 +58,12 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  notify:
+    needs: [build-and-push]
+    runs-on: ubuntu-latest
+    if: github.event_name != 'pull_request'
+    steps:
+      - name: Trigger Webhook
+        run: |
+          curl -X POST "${{ secrets.WEBHOOK_URL }}"
