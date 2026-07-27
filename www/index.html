@@ -4,9 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>HafMC - Ссылки</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
-
         * {
             margin: 0;
             padding: 0;
@@ -65,7 +66,7 @@
             height: 140px;
             border-radius: 50%;
             background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 50%, #3b82f6 100%);
-            background-image: url('avatar.png');
+            background-image: url('avatar.webp');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
@@ -535,9 +536,107 @@
         ::-webkit-scrollbar-thumb:hover {
             background: rgba(255, 255, 255, 0.2);
         }
+
+        /* Фоновый слой из иконок игр (парящие частицы, глубина через слои) */
+        .game-bg {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+            contain: strict;
+            opacity: 0;
+            transition: opacity 1.6s ease;
+            mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+            -webkit-mask-image: linear-gradient(to bottom, transparent 0%, #000 14%, #000 86%, transparent 100%);
+        }
+
+        .game-bg.is-ready {
+            opacity: 1;
+        }
+
+        /* Радиальное затемнение центральной колонки — приглушает частицы прямо
+           за текстом (заголовок, подзаголовки групп, футер), где нет своего
+           backdrop-blur (в отличие от .link-item). Усилено под возросшую
+           плотность фона. */
+        .game-bg::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse 520px 58% at 50% 50%,
+                rgba(4, 4, 7, 0.74) 0%,
+                rgba(4, 4, 7, 0.42) 45%,
+                rgba(4, 4, 7, 0.12) 72%,
+                rgba(4, 4, 7, 0) 88%);
+        }
+
+        .game-icon {
+            position: absolute;
+            border-radius: 30%;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            opacity: 0;
+            will-change: transform, opacity;
+            animation-name: driftUp;
+            animation-timing-function: ease-in-out;
+            animation-iteration-count: infinite;
+        }
+
+        /* Дальний слой (мелкие icon-квадраты, 32×32 без апскейла) — единственный
+           слой с filter: blur (дёшево на маленьких элементах, даёт эффект
+           дальнего боке). Средний и ближний слои filter не используют вовсе —
+           глубина и мягкость там даются только opacity/размером/скоростью,
+           это заметно дешевле на compositing при 150+ элементах. */
+        .game-icon.layer-far {
+            z-index: 1;
+            filter: blur(var(--blur));
+        }
+
+        .game-icon.layer-mid {
+            z-index: 2;
+        }
+
+        /* Ближний слой — крупные капсулы (231:87) без искажений формы.
+           filter не используется совсем; свечение — статичный box-shadow
+           (дешевле, чем filter: drop-shadow, и не требует отдельного
+           растрового прохода на compositing). */
+        .game-icon.layer-near {
+            z-index: 3;
+            box-shadow: 0 0 10px rgba(167, 139, 250, 0.2);
+        }
+
+        /* Форма капсулы: сохраняем пропорцию 231:87, обычный скруглённый
+           прямоугольник вместо сквиркла — иначе широкий арт искажается. */
+        .game-icon.shape-wide {
+            border-radius: 8px;
+        }
+
+        @keyframes driftUp {
+            0%   { opacity: 0;         transform: translate3d(0, 0, 0)                     rotate(0deg); }
+            6%   { opacity: var(--op); }
+            25%  { opacity: var(--op); transform: translate3d(var(--wob), -35vh, 0)         rotate(6deg); }
+            50%  { opacity: var(--op); transform: translate3d(0, -70vh, 0)                  rotate(-4deg); }
+            75%  { opacity: var(--op); transform: translate3d(calc(var(--wob) * -1), -105vh, 0) rotate(5deg); }
+            94%  { opacity: var(--op); }
+            100% { opacity: 0;         transform: translate3d(0, -140vh, 0)                 rotate(0deg); }
+        }
+
+        body.bg-paused .game-icon {
+            animation-play-state: paused;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .game-icon {
+                animation-duration: 320s !important;
+                --wob: 0px !important;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="game-bg" id="gameBg" aria-hidden="true"></div>
+
     <div class="container">
         <div class="profile">
             <div class="profile-avatar"></div>
@@ -675,5 +774,221 @@
             <p>© 2026 HafMC</p>
         </div>
     </div>
+
+    <script>
+        (function () {
+            var bg = document.getElementById('gameBg');
+            if (!bg) return;
+
+            // Реальное соотношение сторон капсулы: 231×87.
+            var CAPSULE_RATIO = 87 / 231;
+
+            function rand(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            // Fisher-Yates: перемешивает массив на месте и возвращает его же.
+            function shuffle(arr) {
+                for (var i = arr.length - 1; i > 0; i--) {
+                    var j = Math.floor(Math.random() * (i + 1));
+                    var tmp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = tmp;
+                }
+                return arr;
+            }
+
+            // Пауза анимации, когда вкладка неактивна (экономим батарею/CPU)
+            document.addEventListener('visibilitychange', function () {
+                document.body.classList.toggle('bg-paused', document.hidden);
+            });
+
+            // Фон — некритичный декор: откладываем его старт до полной загрузки
+            // страницы (window 'load'), а затем до простоя браузера, чтобы
+            // 200+ фоновых запросов не конкурировали за HTTP/1.1-соединения
+            // с аватаром и шрифтами.
+            function whenIdle(cb) {
+                if (typeof window.requestIdleCallback === 'function') {
+                    window.requestIdleCallback(cb);
+                } else {
+                    setTimeout(cb, 200);
+                }
+            }
+
+            function startBg() {
+                whenIdle(initBg);
+            }
+
+            if (document.readyState === 'complete') {
+                startBg();
+            } else {
+                window.addEventListener('load', startBg);
+            }
+
+            function initBg() {
+                fetch('games.json')
+                .then(function (res) {
+                    if (!res.ok) throw new Error('games.json unavailable');
+                    return res.json();
+                })
+                .then(function (data) {
+                    // Компактный манифест: { i: [appid, ...] — все иконки,
+                    // c: [appid, ...] — те, у кого есть крупная капсула }.
+                    // Пути собираются из appid, чтобы не тащить их в JSON.
+                    var ids = data && data.i;
+                    if (!Array.isArray(ids) || ids.length === 0) return;
+
+                    var hasCapsule = Object.create(null);
+                    (Array.isArray(data.c) ? data.c : []).forEach(function (id) {
+                        hasCapsule[id] = true;
+                    });
+
+                    var games = ids.map(function (id) {
+                        var g = { icon: 'icons/' + id + '.webp' };
+                        if (hasCapsule[id]) g.capsule = 'capsules/' + id + '.webp';
+                        return g;
+                    });
+
+                    // Отдельные пулы: capsulePool — только игры с capsule (для
+                    // ближнего слоя), mainPool — все с icon (для дальнего/среднего
+                    // и как фолбэк для ближнего, если capsule вдруг не хватит).
+                    var mainPool = shuffle(games.filter(function (g) { return g && g.icon; }));
+                    var capsulePool = shuffle(games.filter(function (g) { return g && g.capsule; }));
+                    if (mainPool.length === 0) return;
+
+                    var isMobile = window.innerWidth <= 480;
+                    var isTablet = window.innerWidth <= 768;
+
+                    // Плотность и размеры по брейкпоинтам. Библиотека — 500 игр,
+                    // far+mid (icon, ~1.2 КБ/шт) можно смело брать много без веса;
+                    // near (capsule, ~10-15 КБ/шт) держим скромнее ради трафика.
+                    var bp = isMobile
+                        ? { far: 42, mid: 18, near: 10, sizeFar: [10, 16], sizeMid: [22, 34], widthNear: [42, 82] }
+                        : isTablet
+                            ? { far: 76, mid: 34, near: 20, sizeFar: [11, 18], sizeMid: [24, 38], widthNear: [56, 110] }
+                            : { far: 130, mid: 57, near: 33, sizeFar: [12, 20], sizeMid: [26, 42], widthNear: [70, 140] };
+
+                    var far = Math.min(bp.far, mainPool.length);
+                    var mid = Math.min(bp.mid, Math.max(0, mainPool.length - far));
+                    var near = Math.min(bp.near, capsulePool.length);
+
+                    var iconSlice = mainPool.slice(0, far + mid);
+                    var capsuleSlice = capsulePool.slice(0, near);
+
+                    // Фолбэк: если капсул вдруг не хватает на нужный near-count,
+                    // докидываем игры без capsule из остатка mainPool — они
+                    // отрендерятся как обычные квадратные icon-частицы.
+                    var reserve = mainPool.slice(far + mid);
+                    var reserveIdx = 0;
+                    var nearNeeded = bp.near - capsuleSlice.length;
+                    var nearFallback = [];
+                    while (nearFallback.length < nearNeeded && reserveIdx < reserve.length) {
+                        nearFallback.push(reserve[reserveIdx++]);
+                    }
+
+                    // Слоты: сначала группируем по слоям, затем перемешиваем сам
+                    // порядок слотов — чтобы позиция в сетке (см. ниже) не
+                    // коррелировала с тем, в каком порядке слои были собраны.
+                    var slots = [];
+                    var idx = 0;
+                    for (var f = 0; f < far; f++) slots.push({ game: iconSlice[idx++], layer: 'far' });
+                    for (var m = 0; m < mid; m++) slots.push({ game: iconSlice[idx++], layer: 'mid' });
+                    for (var n = 0; n < capsuleSlice.length; n++) slots.push({ game: capsuleSlice[n], layer: 'near' });
+                    for (var nf = 0; nf < nearFallback.length; nf++) slots.push({ game: nearFallback[nf], layer: 'near' });
+                    shuffle(slots);
+
+                    var count = slots.length;
+                    if (count === 0) return;
+
+                    var layerCfg = {
+                        far:  { op: [0.035, 0.07], dur: [55, 90], wob: [6, 16], blur: [1.0, 1.6] },
+                        mid:  { op: [0.06, 0.11],  dur: [36, 58], wob: [10, 24] },
+                        near: { op: [0.10, 0.16],  dur: [22, 38], wob: [14, 30] }
+                    };
+
+                    // Раскладка по джиттерной сетке: делим экран на ячейки,
+                    // перемешиваем порядок ячеек и раздаём по одной на частицу —
+                    // это даёт равномерное покрытие без пустых зон и скучиваний,
+                    // в отличие от полностью случайных координат.
+                    var cols = Math.max(4, Math.round(Math.sqrt(count * 1.6)));
+                    var rows = Math.ceil(count / cols);
+                    var cells = [];
+                    for (var c = 0; c < cols * rows; c++) cells.push(c);
+                    shuffle(cells);
+
+                    var cellW = 100 / cols;
+                    var cellH = 100 / rows;
+
+                    var frag = document.createDocumentFragment();
+
+                    for (var i = 0; i < count; i++) {
+                        var slot = slots[i];
+                        var game = slot.game;
+                        var cfg = layerCfg[slot.layer];
+
+                        var cell = cells[i];
+                        var col = cell % cols;
+                        var row = Math.floor(cell / cols);
+                        var jitterX = rand(-0.35, 0.35) * cellW;
+                        var jitterY = rand(-0.35, 0.35) * cellH;
+                        var left = (col + 0.5) * cellW + jitterX;
+                        var top = (row + 0.5) * cellH + jitterY;
+
+                        var width, height, bgUrl, shapeClass = '';
+
+                        if (slot.layer === 'near' && game.capsule) {
+                            // Настоящая капсула — держим пропорцию 231:87, без искажений.
+                            width = rand(bp.widthNear[0], bp.widthNear[1]);
+                            height = width * CAPSULE_RATIO;
+                            bgUrl = game.capsule;
+                            shapeClass = ' shape-wide';
+                        } else if (slot.layer === 'near') {
+                            // Фолбэк на icon — рисуем квадратом, чтобы не тянуть
+                            // маленькую иконку в широкий прямоугольник (мыло).
+                            width = height = rand(bp.sizeMid[0] * 1.3, bp.sizeMid[1] * 1.3);
+                            bgUrl = game.icon;
+                        } else if (slot.layer === 'mid') {
+                            width = height = rand(bp.sizeMid[0], bp.sizeMid[1]);
+                            bgUrl = game.icon;
+                        } else {
+                            width = height = rand(bp.sizeFar[0], bp.sizeFar[1]);
+                            bgUrl = game.icon;
+                        }
+
+                        var op = rand(cfg.op[0], cfg.op[1]);
+                        var dur = rand(cfg.dur[0], cfg.dur[1]);
+                        var wob = rand(cfg.wob[0], cfg.wob[1]);
+                        // Отрицательная задержка стартует анимацию "в середине цикла",
+                        // чтобы частицы не появлялись все синхронно одной волной.
+                        var delay = -rand(0, dur);
+
+                        var el = document.createElement('div');
+                        el.className = 'game-icon layer-' + slot.layer + shapeClass;
+                        el.style.left = left + '%';
+                        el.style.top = top + '%';
+                        el.style.width = width + 'px';
+                        el.style.height = height + 'px';
+                        el.style.backgroundImage = "url('" + bgUrl + "')";
+                        el.style.setProperty('--op', op);
+                        el.style.setProperty('--wob', wob + 'px');
+                        if (slot.layer === 'far') {
+                            el.style.setProperty('--blur', rand(cfg.blur[0], cfg.blur[1]) + 'px');
+                        }
+                        el.style.animationDuration = dur + 's';
+                        el.style.animationDelay = delay + 's';
+
+                        frag.appendChild(el);
+                    }
+
+                    bg.appendChild(frag);
+                    bg.classList.add('is-ready');
+                })
+                .catch(function () {
+                    // games.json недоступен (например, открыли файл как file://) —
+                    // фон просто не появляется, остальная страница работает как обычно.
+                });
+            }
+        })();
+    </script>
 </body>
 </html>
