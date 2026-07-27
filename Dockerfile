@@ -1,5 +1,8 @@
 FROM nginx:alpine
 
+# Обновляем базовый образ для получения последних обновлений
+RUN apk update && apk upgrade
+
 # Копируем статические файлы
 COPY www /usr/share/nginx/html
 
